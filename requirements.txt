@@ -1,0 +1,9 @@
+aiohttp==3.7.4
+creds==1.0.15
+flake8==3.9.2
+mystbin.py==2.1.3
+typing-extensions==3.7.4.3
+humanize==3.4.1
+asyncpg==0.22.0
+git+https://github.com/Rapptz/discord.py.git
+git+https://github.com/Gorialis/jishaku.git
