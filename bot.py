@@ -1,14 +1,18 @@
 from __future__ import annotations
+
 import logging
 import traceback
 import os
 from datetime import datetime as dt
+
 import aiohttp
 import discord
 from discord.ext import commands
 import mystbin
-
 import creds
+
+def get_prefix(bot, msg):
+    return commands.when_mentioned_or(bot.prefixes)
 
 initial_extensions = (
     "jishaku",
@@ -25,26 +29,27 @@ log.addHandler(handler)
 
 class RoboAy(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix=commands.when_mentioned_or("ra ", "Ra "),
-                        description="A bot made to test some things",
-                        case_insensitive=True,
-                        intents=discord.Intents.all(),
-                        allowed_mentions=discord.AllowedMentions.none(),
-                        help_command=commands.MinimalHelpCommand(),
-                        status=discord.Status.online,
-                        activity=discord.Activity(type=discord.ActivityType.playing, name="ra help"),
+        super().__init__(command_prefix = get_prefix,
+                        description = "A bot made to test some things",
+                        case_insensitive = True,
+                        intents = discord.Intents.all(),
+                        allowed_mentions = discord.AllowedMentions.none(),
+                        help_command = commands.MinimalHelpCommand(),
+                        status = discord.Status.online,
+                        activity = discord.Activity(type=discord.ActivityType.playing, name="ra help"),
                         owner_ids = {681183140357865474, 803147022374535189}
                         )
         self._BotBase__cogs = commands.core._CaseInsensitiveDict()
         self.session = aiohttp.ClientSession()
-        self.mystbin = mystbin.Client()
+        self.mystbin = mystbin.Client(session=self.session)
+        self.prefixes = ["owo ", "ra ", "Ra "]
 
 
     async def on_ready(self):
         if not hasattr(self, 'uptime'):
             self.uptime = dt.utcnow()
-        log.info("Ready")
-        print(f"Logged in as {self.user.name}\nID: {self.user.id}")
+        log.info("Logged in")
+        print(f"Logged in as {self.user}\nID: {self.user.id}")
         print(f"Discord Version: {discord.__version__}")
 
 
@@ -57,8 +62,7 @@ class RoboAy(commands.Bot):
             return
         elif isinstance(error, commands.BadArgument):
             return await ctx.send(str(error))
-        await ctx.send(error)
-        traceback.print_exc()
+        await ctx.send(str(await self.mystbin.post(traceback.format_exc(), syntax="python")))
 
 
     async def process_commands(self, msg: discord.Message):

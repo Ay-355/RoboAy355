@@ -15,6 +15,11 @@ class Owner(commands.Cog):
     def __init__(self, bot: RoboAy) -> None:
         self.bot = bot
 
+    def cog_check(self, ctx: commands.Context):
+        if ctx.author.id in self.bot.owner_ids:
+            return True
+        raise commands.NotOwner()
+
 
     @commands.command(name="reload", aliases=["r"])
     async def reload(self, ctx: commands.Context, cog: str):
