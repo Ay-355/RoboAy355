@@ -11,8 +11,9 @@ import mystbin
 import creds
 
 initial_extensions = (
-    "jishaku"
-    "cogs.buttons"
+    "jishaku",
+    "cogs.buttons",
+    "cogs.owner"
 )
 
 log = logging.getLogger("discord")
@@ -24,18 +25,18 @@ log.addHandler(handler)
 
 class RoboAy(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix=commands.when_mentioned_or("ra "),
+        super().__init__(command_prefix=commands.when_mentioned_or("ra ", "Ra "),
                         description="A bot made to test some things",
                         case_insensitive=True,
                         intents=discord.Intents.all(),
                         allowed_mentions=discord.AllowedMentions.none(),
-                        help_comand=commands.MinimalHelpCommand(),
+                        help_command=commands.MinimalHelpCommand(),
                         status=discord.Status.online,
                         activity=discord.Activity(type=discord.ActivityType.playing, name="ra help"),
                         owner_ids = {681183140357865474, 803147022374535189}
                         )
         self._BotBase__cogs = commands.core._CaseInsensitiveDict()
-        self.session = aiohttp.ClientSession(loop=self.loop)
+        self.session = aiohttp.ClientSession()
         self.mystbin = mystbin.Client()
 
 
@@ -49,6 +50,15 @@ class RoboAy(commands.Bot):
 
     # async def get_context(self, message, *, cls=None):
     #     return await super().get_context(cls=cls or commands.Context)
+
+
+    async def on_command_error(self, ctx: commands.Context, error):
+        if isinstance(error, (commands.CheckFailure, commands.NotOwner, commands.CommandNotFound)):
+            return
+        elif isinstance(error, commands.BadArgument):
+            return await ctx.send(str(error))
+        await ctx.send(error)
+        traceback.print_exc()
 
 
     async def process_commands(self, msg: discord.Message):
@@ -84,7 +94,7 @@ class RoboAy(commands.Bot):
             except Exception as e:
                 log.critical(f"'{ext}' did not load. Traceback: {e}")
                 traceback.print_exc()
-        super().run(creds.token, reconnect=True, *args, **kwargs)
+        super().run(creds.standle_token, reconnect=True, *args, **kwargs)
 
 
 if __name__ == "__main__":
