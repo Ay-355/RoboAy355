@@ -12,25 +12,26 @@ import mystbin
 import creds
 
 def get_prefix(bot, msg):
-    return commands.when_mentioned_or(bot.prefixes)
+    return commands.when_mentioned_or(*bot.prefixes)(bot, msg)
 
 initial_extensions = (
     "jishaku",
     "cogs.buttons",
-    "cogs.owner"
+    "cogs.owner",
+    "cogs.misc"
 )
 
 log = logging.getLogger("discord")
 log.setLevel(logging.INFO)
 handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
-handler.setFormatter(logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s"))
+handler.setFormatter(logging.Formatter("%(asctime)s | %(levelname)s | %(name)s -> %(message)s"))
 log.addHandler(handler)
 
 
 class RoboAy(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix = get_prefix,
-                        description = "A bot made to test some things",
+                        description = "Personal bot made to test some things",
                         case_insensitive = True,
                         intents = discord.Intents.all(),
                         allowed_mentions = discord.AllowedMentions.none(),
@@ -57,19 +58,13 @@ class RoboAy(commands.Bot):
     #     return await super().get_context(cls=cls or commands.Context)
 
 
-    async def on_command_error(self, ctx: commands.Context, error):
-        if isinstance(error, (commands.CheckFailure, commands.NotOwner, commands.CommandNotFound)):
-            return
-        elif isinstance(error, commands.BadArgument):
-            return await ctx.send(str(error))
-        await ctx.send(str(await self.mystbin.post(traceback.format_exc(), syntax="python")))
-
 
     async def process_commands(self, msg: discord.Message):
         ctx = await self.get_context(msg)
         try:
             await self.invoke(ctx)
         except Exception:
+            log.info("Error processing message")
             raise
 
 
@@ -80,7 +75,7 @@ class RoboAy(commands.Bot):
             f"<@{self.user.id}>",
             f"<@!{self.user.id}>"
         ):
-            await msg.channel.send("My prefix is `ra `")
+            await msg.channel.send("My prefix is `owo `")
         await self.process_commands(msg)
 
 
