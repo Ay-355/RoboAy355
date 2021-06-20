@@ -10,6 +10,7 @@ import discord
 from discord.ext import commands
 import mystbin
 import creds
+from discord_slash import SlashCommand
 
 def get_prefix(bot, msg):
     return commands.when_mentioned_or(*bot.prefixes)(bot, msg)
@@ -20,6 +21,7 @@ initial_extensions = (
     "cogs.events",
     "cogs.misc",
     "cogs.owner",
+    "cogs.slash"
 )
 
 log = logging.getLogger("discord")
@@ -95,4 +97,5 @@ class RoboAy(commands.Bot):
 
 if __name__ == "__main__":
     bot = RoboAy()
+    slash = SlashCommand(bot, sync_commands=True)
     bot.run()
