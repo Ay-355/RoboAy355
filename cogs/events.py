@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+import traceback
+
 import discord
 from discord.ext import commands
-import traceback
 
 if TYPE_CHECKING:
     from bot import RoboAy
-
 
 
 class Events(commands.Cog):
@@ -77,7 +77,7 @@ class Events(commands.Cog):
             )
 
         else:
-            await ctx.send(f"An Unknown Error has occurred -> {await self.bot.mystbin.post(traceback.format_exc())}")
+            await ctx.send(f"An Unknown Error has occurred -> {await self.bot.mystbin.post(''.join(traceback.format_exception(type(error), error, error.__traceback__, 1)))}")
             raise error
 
 

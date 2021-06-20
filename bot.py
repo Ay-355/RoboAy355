@@ -17,8 +17,9 @@ def get_prefix(bot, msg):
 initial_extensions = (
     "jishaku",
     "cogs.buttons",
+    "cogs.events",
+    "cogs.misc",
     "cogs.owner",
-    "cogs.misc"
 )
 
 log = logging.getLogger("discord")
@@ -52,10 +53,6 @@ class RoboAy(commands.Bot):
         log.info("Logged in")
         print(f"Logged in as {self.user}\nID: {self.user.id}")
         print(f"Discord Version: {discord.__version__}")
-
-
-    # async def get_context(self, message, *, cls=None):
-    #     return await super().get_context(cls=cls or commands.Context)
 
 
 

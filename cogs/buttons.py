@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-# import asyncio
+from typing import TYPE_CHECKING, Optional
 import traceback
+import asyncio
+import random
 
 import discord
 from discord import ui
@@ -111,16 +112,18 @@ class TicTacToe(discord.ui.View):
 
         return None
 
+
 class CompetitionView(ui.View):
     def __init__(self, ctx):
         super().__init__()
         self.ctx = ctx
         self.pressed = {}
-        self.m = "Competition\n-----------\n"
+        self.m = "Competition\n--------------\n"
+
 
 class CompetitionButton(ui.Button["CompetitionView"]):
     def __init__(self):
-        super().__init__(label="How many times can you click this", style=discord.ButtonStyle.blurple)
+        super().__init__(label="How many times can you click this?", style=discord.ButtonStyle.blurple)
 
     async def callback(self, interaction: discord.Interaction):
         try:
@@ -139,22 +142,42 @@ class CompetitionButton(ui.Button["CompetitionView"]):
         await interaction.response.edit_message(content=self.view.m + final)
 
 
-
 class TotalView(ui.View):
     def __init__(self):
         super().__init__()
-        self.m = "People who have clicked the button"
+        self.m = "People who have clicked the button\n----------------------------"
+
 
 class TotalButton(ui.Button["TotalView"]):
     def __init__(self):
         super().__init__(label="Click This", style=discord.ButtonStyle.secondary)
 
     async def callback(self, interaction: discord.Interaction):
-        try:
-            self.view.m += f"\n{interaction.user.name}"
-            await interaction.response.edit_message(content=self.view.m)
-            await interaction.response.send_message(content=f"{interaction.user.name}, you should see your name on it now", ephemeral=True)
-        except: traceback.print_exc()
+        self.view.m += f"\n{interaction.user.name}"
+        await interaction.response.edit_message(content=self.view.m)
+
+
+
+class WhackAMoleView(ui.View):
+    ...
+
+
+class WhackAMoleButton(ui.Button):
+    ...
+
+
+class RPSView(ui.View):
+    def __init__(self):
+        super().__init__()
+
+
+class RPSButton(ui.Button["RPSView"]):
+    def __init__(self):
+        super().__init__(label="Rock Paper Scissors!", style=discord.ButtonStyle.secondary)
+    
+    async def callback(self, interaction: discord.Interaction):
+        ...
+
 
 class Buttons(commands.Cog):
     def __init__(self, bot: RoboAy) -> None:
@@ -177,9 +200,14 @@ class Buttons(commands.Cog):
     async def _comp(self, ctx: commands.Context):
         v = CompetitionView(ctx)
         v.add_item(CompetitionButton())
-        await ctx.send("Click", view=v)
+        await ctx.send("Click It", view=v)
         await v.wait()
 
+
+    # @commands.command(name="rps")
+    # async def _rps(self, ctx: commands.Context):
+    #     v = RPSView()
+    #     await ctx.send("Rock Paper Scissors", view=v)
 
 
 def setup(bot: RoboAy):
