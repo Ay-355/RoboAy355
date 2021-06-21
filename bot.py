@@ -11,6 +11,8 @@ from discord.ext import commands
 import mystbin
 import creds
 from discord_slash import SlashCommand
+from utils.context import RContext
+
 
 def get_prefix(bot, msg):
     return commands.when_mentioned_or(*bot.prefixes)(bot, msg)
@@ -40,7 +42,7 @@ class RoboAy(commands.Bot):
                         allowed_mentions = discord.AllowedMentions.none(),
                         help_command = commands.MinimalHelpCommand(),
                         status = discord.Status.online,
-                        activity = discord.Activity(type=discord.ActivityType.playing, name="ra help"),
+                        activity = discord.Activity(type=discord.ActivityType.playing, name="owo help"),
                         owner_ids = {681183140357865474, 803147022374535189}
                         )
         self._BotBase__cogs = commands.core._CaseInsensitiveDict()
@@ -59,7 +61,7 @@ class RoboAy(commands.Bot):
 
 
     async def process_commands(self, msg: discord.Message):
-        ctx = await self.get_context(msg)
+        ctx = await self.get_context(msg, cls=RContext)
         try:
             await self.invoke(ctx)
         except Exception:

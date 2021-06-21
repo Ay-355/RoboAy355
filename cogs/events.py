@@ -5,6 +5,7 @@ import traceback
 
 import discord
 from discord.ext import commands
+from utils.context import RContext
 
 if TYPE_CHECKING:
     from bot import RoboAy
@@ -16,7 +17,7 @@ class Events(commands.Cog):
 
 
     @commands.Cog.listener()
-    async def on_command_error(self, ctx: commands.Context, error):
+    async def on_command_error(self, ctx: RContext, error):
         if (
             hasattr(ctx.command, "on_error")
             or (ctx.command and hasattr(ctx.cog, f"_{ctx.command.cog_name}__error"))

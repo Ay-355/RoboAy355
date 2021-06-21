@@ -8,6 +8,7 @@ import random
 import discord
 from discord import ui
 from discord.ext import commands
+from utils.context import RContext
 
 if TYPE_CHECKING:
     from bot import RoboAy
@@ -185,27 +186,30 @@ class Buttons(commands.Cog):
 
 
     @commands.command("plsdontspamthis", aliases=["pdst"])
-    async def plsdontpsamthis(self, ctx: commands.Context):
+    async def plsdontpsamthis(self, ctx: RContext):
         v = TotalView()
         v.add_item(TotalButton())
         await ctx.send(content="Please don't spam this", view=v)
+        await ctx.done()
         await v.wait()
 
 
     @commands.command(name="ttt")
-    async def tic(self, ctx: commands.Context):
+    async def tic(self, ctx: RContext):
         await ctx.send('Tic Tac Toe: X goes first', view=TicTacToe())
+        await ctx.done()
 
     @commands.command(name="comp")
-    async def _comp(self, ctx: commands.Context):
+    async def _comp(self, ctx: RContext):
         v = CompetitionView(ctx)
         v.add_item(CompetitionButton())
         await ctx.send("Click It", view=v)
+        await ctx.done()
         await v.wait()
 
 
     # @commands.command(name="rps")
-    # async def _rps(self, ctx: commands.Context):
+    # async def _rps(self, ctx: RContext):
     #     v = RPSView()
     #     await ctx.send("Rock Paper Scissors", view=v)
 
