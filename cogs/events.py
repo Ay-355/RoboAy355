@@ -18,6 +18,7 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx: RContext, error):
+        """Error Handler"""
         if (
             hasattr(ctx.command, "on_error")
             or (ctx.command and hasattr(ctx.cog, f"_{ctx.command.cog_name}__error"))

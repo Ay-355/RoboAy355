@@ -187,6 +187,7 @@ class Buttons(commands.Cog):
 
     @commands.command("plsdontspamthis", aliases=["pdst"])
     async def plsdontpsamthis(self, ctx: RContext):
+        """Sends a button that adds you name to the message"""
         v = TotalView()
         v.add_item(TotalButton())
         await ctx.send(content="Please don't spam this", view=v)
@@ -196,11 +197,13 @@ class Buttons(commands.Cog):
 
     @commands.command(name="ttt")
     async def tic(self, ctx: RContext):
+        """The classic tictactoe with buttons"""
         await ctx.send('Tic Tac Toe: X goes first', view=TicTacToe())
         await ctx.done()
 
     @commands.command(name="comp")
     async def _comp(self, ctx: RContext):
+        """Who can press the button the most?"""
         v = CompetitionView(ctx)
         v.add_item(CompetitionButton())
         await ctx.send("Click It", view=v)

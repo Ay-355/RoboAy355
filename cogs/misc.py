@@ -21,24 +21,28 @@ class Misc(commands.Cog):
 
     @commands.command(name="echo", aliases=["say"])
     async def _echo(self, ctx: RContext, msg: str):
+        """Input a message and get it repeated"""
         await ctx.send(msg)
         await ctx.done()
 
 
     @commands.command(name="ping")
     async def _ping(self, ctx: RContext):
+        """See the latency of the bot"""
         await ctx.send(embed=discord.Embed(title="Pong!", description=f"{self.bot.latency*1000:.2f} ms"))
         await ctx.done()
 
 
     @commands.command(name="uptime")
     async def _uptime(self, ctx: RContext):
+        """See how long the bot has been up for"""
         await ctx.send(f"I have been up for {humanize.precisedelta(datetime.datetime.utcnow() - self.bot.uptime, format ='%0.2f')}")
         await ctx.done()
 
 
     @commands.command(name="source")
     async def source(self, ctx: RContext, command: str = None):
+        """Sends the repo link or the link to the source of a command"""
         if command is None:
             return await ctx.send('<https://github.com/Ay-355/RoboAy355>')
         if (obj := self.bot.get_command(command.replace('.', ' '))) is None:

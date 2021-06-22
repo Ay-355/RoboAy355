@@ -19,7 +19,7 @@ class Owner(commands.Cog):
     def __init__(self, bot: RoboAy) -> None:
         self.bot = bot
 
-    def cog_check(self, ctx: RContext):
+    def cog_check(self, ctx: RContext) -> bool:
         if ctx.author.id in self.bot.owner_ids:
             return True
         raise commands.NotOwner()
@@ -27,6 +27,7 @@ class Owner(commands.Cog):
 
     @commands.command(name="reload", aliases=["r"])
     async def reload(self, ctx: RContext, cog: str):
+        """Reloads an extension, or all of them"""
         if cog in {"a", "all"}:
             m = ""
             for ext in list(self.bot.extensions):
@@ -47,6 +48,7 @@ class Owner(commands.Cog):
 
     @commands.command(name="unload", aliases=["u"])
     async def unload(self, ctx: RContext, cog: str):
+        """Unloads an extension, or all of them"""
         if cog in {"a", "all"}:
             for ext in list(self.bot.extensions):
                 try:
@@ -66,6 +68,7 @@ class Owner(commands.Cog):
 
     @commands.command(name="load", aliases=["l"])
     async def load(self, ctx: RContext, cog: str):
+        """Loads an extension or all of them"""
         if cog in {"a", "all"}:
             for ext in list(self.bot.extensions):
                 try:
@@ -85,12 +88,14 @@ class Owner(commands.Cog):
 
     @commands.command(name="nopresence", aliases=["np"])
     async def no_presence(self, ctx: RContext):
+        """Resets the activity. Useful for when hosting 2 instances of a bot"""
         await self.bot.change_presence(activity=None)
         await ctx.done()
 
 
     @commands.command(name="dm")
     async def _dm(self, ctx: RContext, user: discord.User, *, message: str):
+        """Dm's a user"""
         try:
             await user.send(message)
         except:
@@ -99,6 +104,7 @@ class Owner(commands.Cog):
 
     @commands.command(name="utils")
     async def _utils(self, ctx: RContext, module: str):
+        """Reloads a utils module"""
         utilsEmbed = discord.Embed(title="Utils Reload")
         if module in {"a", "all"}:
             for f in os.listdir("./utils"):
@@ -122,6 +128,7 @@ class Owner(commands.Cog):
 
     @commands.command(name="clean")
     async def clean(self, ctx: RContext, number: int = None):
+        """Cleans up the bot's messages"""
         def check(m: discord.Message):
             return m.author == self.bot.user
 
@@ -139,6 +146,7 @@ class Owner(commands.Cog):
 
     @edit.command(name="name")
     async def edit_username(self, ctx: RContext, *, username: str):
+        """Change the bot's username"""
         try:
             await self.bot.user.edit(username=username)
             await ctx.send(embed=discord.Embed(title="Success", description=f"Changed my username to `{username}`"))
@@ -149,6 +157,7 @@ class Owner(commands.Cog):
 
     @edit.command(name="avatar")
     async def edit_avatar(self, ctx: RContext, image = None):
+        """Change the bot's avatar"""
         url = None
         if a := ctx.message.attachments:
             url = a[0].proxy_url
@@ -164,12 +173,14 @@ class Owner(commands.Cog):
 
     @edit.command(name="nick")
     async def edit_nick(self, ctx: RContext, *, nick: str):
+        """Changes the bot's nickname in the current guild"""
         await ctx.guild.me.edit(nick=nick)
         await ctx.send(f"My nickname is now {nick}")
 
 
     @commands.command(name="leaveguild")
     async def leave_guild(self, ctx: RContext, guild: discord.Guild = None):
+        """Leaves a guild. Should never be used"""
         guild = guild or ctx.guild
         await ctx.send(f"Are you sure you want to leave this guild? -> {guild.name} ({guild.id})")
         try:
