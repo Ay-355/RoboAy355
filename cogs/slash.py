@@ -19,7 +19,7 @@ class SlashCmds(commands.Cog):
     @cog_ext.cog_slash(name="test")
     async def test(self, ctx: SlashContext):
         """A test slash command"""
-        await ctx.send(content="this is a test message", ephemeral=True)
+        await ctx.send(content="this is a test message")
 
 
     @cog_ext.cog_slash(name="ping")
