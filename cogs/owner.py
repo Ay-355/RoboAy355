@@ -126,11 +126,7 @@ class Owner(commands.Cog):
             return m.author == self.bot.user
 
         if number is None:
-            return (
-                await ctx.message.reference.resolved.delete()
-                if ctx.message.reference
-                else await ctx.send('No Message to delete')
-            )
+            return (await ctx.ref_res.delete() if ctx.ref else await ctx.send('No Message to delete'))
         n = await ctx.channel.purge(limit=number, check=check)
         await ctx.send(f"Purged {len(n)} messages")
 
@@ -145,25 +141,25 @@ class Owner(commands.Cog):
     async def edit_username(self, ctx: RContext, *, username: str):
         try:
             await self.bot.user.edit(username=username)
-            await ctx.send(embed=ctx.embed(title="Success", description=f"Changed my username to `{username}`"))
+            await ctx.send(embed=discord.Embed(title="Success", description=f"Changed my username to `{username}`"))
         except Exception as e:
             await ctx.send(e)
 
 
 
     @edit.command(name="avatar")
-    async def edit_avatar(self, ctx: RContext, image=None):
+    async def edit_avatar(self, ctx: RContext, image = None):
         url = None
         if a := ctx.message.attachments:
             url = a[0].proxy_url
         else: 
-            url = image #too lazy for anything else, never gonna actually change it anyways
+            url = image  #too lazy for anything else, never gonna actually change it anyways
         async with ctx.session.get(url) as res:
-            if res.ok:
+            if res.status == 200:
                 await self.bot.user.edit(avatar=await res.read())
                 await ctx.done()
             else:
-                return await ctx.send("Could not change avatar")
+                return await ctx.send("Could not change avatar, image was probably not a link")
 
 
     @edit.command(name="nick")
@@ -173,7 +169,7 @@ class Owner(commands.Cog):
 
 
     @commands.command(name="leaveguild")
-    async def leave_guild(self, ctx: RContext, guild: discord.Guild):
+    async def leave_guild(self, ctx: RContext, guild: discord.Guild = None):
         guild = guild or ctx.guild
         await ctx.send(f"Are you sure you want to leave this guild? -> {guild.name} ({guild.id})")
         try:
