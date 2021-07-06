@@ -1,9 +1,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional
-import traceback
-import asyncio
-import random
 
 import discord
 from discord import ui
@@ -159,12 +156,12 @@ class TotalButton(ui.Button["TotalView"]):
 
 
 
-class WhackAMoleView(ui.View):
-    ...
+# class WhackAMoleView(ui.View):
+#     ...
 
 
-class WhackAMoleButton(ui.Button):
-    ...
+# class WhackAMoleButton(ui.Button):
+#     ...
 
 
 class RPSView(ui.View):
@@ -174,7 +171,7 @@ class RPSView(ui.View):
 
 class RPSButton(ui.Button["RPSView"]):
     def __init__(self):
-        super().__init__(label="Rock Paper Scissors!", style=discord.ButtonStyle.secondary)
+        super().__init__(style=discord.ButtonStyle.secondary)
     
     async def callback(self, interaction: discord.Interaction):
         ...

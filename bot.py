@@ -10,7 +10,6 @@ import discord
 from discord.ext import commands
 import mystbin
 import creds
-from discord_slash import SlashCommand
 from utils.context import RContext
 
 
@@ -23,7 +22,7 @@ initial_extensions = (
     "cogs.events",
     "cogs.misc",
     "cogs.owner",
-    "cogs.slash"
+    # "cogs.slash"
 )
 
 log = logging.getLogger("discord")
@@ -48,7 +47,8 @@ class RoboAy(commands.Bot):
         self._BotBase__cogs = commands.core._CaseInsensitiveDict()
         self.session = aiohttp.ClientSession()
         self.mystbin = mystbin.Client(session=self.session)
-        self.prefixes = ["owo ", "ra ", "Ra "]
+        self.prefixes = ["owo ", "ra ", "Ra ", "Owo"]
+        self.creds = creds
 
 
     async def on_ready(self):
@@ -64,13 +64,15 @@ class RoboAy(commands.Bot):
         ctx = await self.get_context(msg, cls=RContext)
         try:
             await self.invoke(ctx)
-        except Exception:
-            log.info("Error processing message")
-            raise
+        except Exception as e:
+            log.error("Error processing message")
+            raise e
 
 
     async def on_message(self, msg: discord.Message):
         if msg.author.bot:
+            return
+        if msg.guild.get_member(681183140357865474) is None: # make sure im in server commands are being used in
             return
         if msg.content in (
             f"<@{self.user.id}>",
@@ -78,6 +80,10 @@ class RoboAy(commands.Bot):
         ):
             await msg.channel.send("My prefix is `owo `")
         await self.process_commands(msg)
+
+    async def on_message_edit(self, before: discord.Message, after: discord.Message):
+        if before.content != after.content:
+            await self.process_commands(after)
 
 
     os.environ['JISHAKU_NO_UNDERSCORE'] = 'True'
@@ -99,5 +105,4 @@ class RoboAy(commands.Bot):
 
 if __name__ == "__main__":
     bot = RoboAy()
-    slash = SlashCommand(bot, sync_commands=True)
     bot.run()

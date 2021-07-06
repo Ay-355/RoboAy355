@@ -28,7 +28,7 @@ class Events(commands.Cog):
         error = getattr(error, "original", error)
 
 
-        str_errors = ( #who cares, just send the error, way too lazy
+        str_errors = ( # eh
             discord.Forbidden,
             commands.BadArgument,
             commands.BadBoolArgument,
@@ -52,7 +52,7 @@ class Events(commands.Cog):
             return await ctx.send(str(error))
 
         elif isinstance(error, commands.MissingRequiredArgument):
-            return await ctx.send(f"**Please pass the `{error.param.name}` parameter**\nCorrect Usage:  {ctx.clean_prefix}{ctx.command.name} {ctx.command.signature}")
+            return await ctx.send(f"Please pass the `{error.param.name}` parameter\nCorrect Usage:  `{ctx.clean_prefix}{ctx.command.name} {ctx.command.signature}`")
 
         elif isinstance(error, commands.NoPrivateMessage):
             return await ctx.author.send(f"Command `{ctx.command.name}` can not be used in private messages")
@@ -62,7 +62,7 @@ class Events(commands.Cog):
             return await ctx.send(
                 f"You need the " 
                 + ", ".join(
-                    perm.replace("_", " ").replace("guild", "server") 
+                    perm.replace("_", " ").replace("guild", "server").title()
                     for perm in error.missing_perms
                 ) 
                 + " permission(s) to carry out that command!\nTry again when you have them."
@@ -72,14 +72,16 @@ class Events(commands.Cog):
             return await ctx.send(
                 f"I need the "
                 + ", ".join(
-                    perm.replace("_", " ").replace("guild", "server")
+                    perm.replace("_", " ").replace("guild", "server").title()
                     for perm in error.missing_perms
                 )
                 + " permission(s) to carry out that command!"
             )
 
         else:
-            await ctx.send(f"An Unknown Error has occurred -> {await self.bot.mystbin.post(''.join(traceback.format_exception(type(error), error, error.__traceback__, 1)))}")
+            formatted = ''.join(traceback.format_exception(type(error), error, error.__traceback__, 1))
+            tb = formatted.replace(self.bot.creds.name, "Ay355") # safety things
+            await ctx.send(f"An Unknown Error has occurred: \n{str(await self.bot.mystbin.post(tb)) if len(tb) > 1800 else f'```\n{tb}\n```'}")
             raise error
 
 

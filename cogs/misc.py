@@ -14,6 +14,16 @@ if TYPE_CHECKING:
     from bot import RoboAy
 
 
+class Google(discord.ui.View):
+    def __init__(self, query: str):
+        super().__init__()
+        self.query = query.replace(' ', '+')
+
+        self.google_button = discord.ui.Button(style=discord.ButtonStyle.link, label='Click Here', url='https://www.google.com/search?q=' + self.query)
+
+        self.add_item(self.google_button)
+
+
 class Misc(commands.Cog):
     def __init__(self, bot: RoboAy) -> None:
         self.bot = bot 
@@ -41,7 +51,7 @@ class Misc(commands.Cog):
 
 
     @commands.command(name="source")
-    async def source(self, ctx: RContext, command: str = None):
+    async def source(self, ctx: RContext, command: str = None): #taken from R.Danny: https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/meta.py#L344-L382
         """Sends the repo link or the link to the source of a command"""
         if command is None:
             return await ctx.send('<https://github.com/Ay-355/RoboAy355>')
@@ -58,6 +68,13 @@ class Misc(commands.Cog):
 
         await ctx.send(f"Here is the source for the `{command}` command -> <https://github.com/Ay-355/RoboAy355/blob/master/{location}#L{firstlineno}-L{firstlineno + len(lines) - 1}>")
         await ctx.done()
+
+
+    @commands.command(name="google")
+    async def google(self, ctx: RContext, *, query: str):
+        """Returns a google link for your query"""
+        await ctx.send(f"Google Result for: `{query}`", view=Google(query))
+
 
 
 def setup(bot: RoboAy):
