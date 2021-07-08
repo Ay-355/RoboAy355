@@ -79,9 +79,11 @@ class Events(commands.Cog):
             )
 
         else:
-            formatted = ''.join(traceback.format_exception(type(error), error, error.__traceback__, 1))
-            tb = formatted.replace(self.bot.creds.name, "Ay355") # safety things
-            await ctx.send(f"An Unknown Error has occurred: \n{str(await self.bot.mystbin.post(tb)) if len(tb) > 1800 else f'```\n{tb}\n```'}")
+            tb = ''.join(traceback.format_exception(type(error), error, error.__traceback__, 1))
+            if hasattr(self.bot.creds, "name"):
+                tb = tb.replace(self.bot.creds.name, "Ay355") # safety things
+            final = str(await self.bot.mystbin.post(tb)) if len(tb) > 1800 else f'```\n{tb}\n```'
+            await ctx.send(f"An Unknown Error has occurred: \n{final}")
             raise error
 
 
