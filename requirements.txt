@@ -1,4 +1,4 @@
-aiohttp==3.7.4
+aiohttp==3.7.4.post0
 creds==1.0.15
 flake8==3.9.2
 mystbin.py==2.1.3
