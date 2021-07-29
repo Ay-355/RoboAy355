@@ -1,14 +1,16 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+
 import humanize
 import datetime
-import discord
-from discord.ext import commands
 import inspect
 import os
-from utils.context import RContext
+from urllib.parse import quote_plus
 
+from utils.context import RContext
+import discord
+from discord.ext import commands
 
 if TYPE_CHECKING:
     from bot import RoboAy
@@ -17,11 +19,9 @@ if TYPE_CHECKING:
 class Google(discord.ui.View):
     def __init__(self, query: str):
         super().__init__()
-        self.query = query.replace(' ', '+')
+        self.url = f'https://www.google.com/search?q={quote_plus(query)}'
 
-        self.google_button = discord.ui.Button(style=discord.ButtonStyle.link, label='Click Here', url='https://www.google.com/search?q=' + self.query)
-
-        self.add_item(self.google_button)
+        self.add_item(discord.ui.Button(label='Click Here', url=self.url))
 
 
 class Misc(commands.Cog):
