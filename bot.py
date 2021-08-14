@@ -11,7 +11,7 @@ from discord.ext import commands
 import mystbin
 import creds
 from utils.context import RContext
-
+from jishaku.help_command import MinimalEmbedPaginatorHelp
 
 def get_prefix(bot, msg):
     return commands.when_mentioned_or(*bot.prefixes)(bot, msg)
@@ -37,9 +37,9 @@ class RoboAy(commands.Bot):
         super().__init__(command_prefix = get_prefix,
                         description = "Personal bot made to test some things",
                         case_insensitive = True,
+                        help_command = MinimalEmbedPaginatorHelp(),
                         intents = discord.Intents.all(),
                         allowed_mentions = discord.AllowedMentions.none(),
-                        help_command = commands.MinimalHelpCommand(),
                         status = discord.Status.online,
                         activity = discord.Activity(type=discord.ActivityType.playing, name="owo help"),
                         owner_ids = {681183140357865474, 803147022374535189}
