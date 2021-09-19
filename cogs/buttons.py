@@ -10,6 +10,9 @@ from utils.context import RContext
 if TYPE_CHECKING:
     from bot import RoboAy
 
+# taken from the gist before it was added officially as example
+# https://github.com/Rapptz/discord.py/blob/master/examples/views/tic_tac_toe.py
+
 class TicTacToeButton(discord.ui.Button['TicTacToe']):
     def __init__(self, x: int, y: int):
         super().__init__(style=discord.ButtonStyle.secondary, label='\u200b', row=y)
@@ -156,27 +159,6 @@ class TotalButton(ui.Button["TotalView"]):
 
 
 
-# class WhackAMoleView(ui.View):
-#     ...
-
-
-# class WhackAMoleButton(ui.Button):
-#     ...
-
-
-class RPSView(ui.View):
-    def __init__(self):
-        super().__init__()
-
-
-class RPSButton(ui.Button["RPSView"]):
-    def __init__(self):
-        super().__init__(style=discord.ButtonStyle.secondary)
-    
-    async def callback(self, interaction: discord.Interaction):
-        ...
-
-
 class Buttons(commands.Cog):
     def __init__(self, bot: RoboAy) -> None:
         self.bot = bot
@@ -184,7 +166,7 @@ class Buttons(commands.Cog):
 
     @commands.command("plsdontspamthis", aliases=["pdst"])
     async def plsdontpsamthis(self, ctx: RContext):
-        """Sends a button that adds you name to the message"""
+        """Sends a button that adds your name to the message"""
         v = TotalView()
         v.add_item(TotalButton())
         await ctx.send(content="Please don't spam this", view=v)
