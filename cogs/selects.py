@@ -23,6 +23,5 @@ class Selects(commands.Cog):
         ...
 
 
-
 def setup(bot: RoboAy):
     bot.add_cog(Selects(bot))
