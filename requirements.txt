@@ -1,5 +1,5 @@
 aiohttp
-mystbin.py==5.0.2
+mystbin.py==5.1.0
 humanize==4.3.0
 git+https://github.com/Rapptz/discord.py.git@master
 git+https://github.com/Gorialis/jishaku.git@master
